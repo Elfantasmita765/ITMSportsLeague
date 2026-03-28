@@ -14,7 +14,9 @@ namespace SportsLeague.DataAccess.Context
         public DbSet<Player> Players => Set<Player>();
         public DbSet<Referee> Referees => Set<Referee>();            
         public DbSet<Tournament> Tournaments => Set<Tournament>();   
-        public DbSet<TournamentTeam> TournamentTeams => Set<TournamentTeam>(); 
+        public DbSet<TournamentTeam> TournamentTeams => Set<TournamentTeam>();
+        public DbSet<Sponsor> Sponsors => Set<Sponsor>();   //NUEVO
+        public DbSet<TournamentSponsor> TournamentSponsors => Set<TournamentSponsor>(); //NUEVO
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -143,6 +145,62 @@ namespace SportsLeague.DataAccess.Context
                       .IsUnique();
             });
 
+            //NUEVO
+
+            // ── Sponsor Configuration ──
+            modelBuilder.Entity<Sponsor>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Name)
+                      .IsRequired()
+                      .HasMaxLength(150);
+                entity.Property(t => t.ContactEmail)
+                      .IsRequired()
+                      .HasMaxLength(150);
+                entity.Property(t => t.Phone)
+                      .HasMaxLength(20);
+                entity.Property(t => t.WebsiteUrl)
+                      .HasMaxLength(500);
+                entity.Property(t => t.Category)
+                      .IsRequired();
+                entity.Property(t => t.CreatedAt)
+                      .IsRequired();
+                entity.Property(t => t.UpdatedAt)
+                      .IsRequired(false);
+                entity.HasIndex(t => t.Name)
+                      .IsUnique();
+            });
+
+            // ── TournamentSponsor Configuration ──
+            modelBuilder.Entity<TournamentSponsor>(entity =>
+            {
+                entity.HasKey(tt => tt.Id);
+                entity.Property(tt => tt.ContractAmount)
+                      .HasPrecision(18,2)
+                      .IsRequired();
+                entity.Property(tt => tt.JoinedAt)
+                      .IsRequired();
+                entity.Property(tt => tt.CreatedAt)
+                      .IsRequired();
+                entity.Property(tt => tt.UpdatedAt)
+                      .IsRequired(false);
+
+                // Relación con Tournament
+                entity.HasOne(tt => tt.Tournament)
+                      .WithMany(t => t.TournamentSponsors)
+                      .HasForeignKey(tt => tt.TournamentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Relación con Sponsor
+                entity.HasOne(tt => tt.Sponsor)
+                      .WithMany(t => t.TournamentSponsors)
+                      .HasForeignKey(tt => tt.SponsorId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Índice único compuesto: un sponsor solo una vez por torneo
+                entity.HasIndex(tt => new { tt.TournamentId, tt.SponsorId })
+                      .IsUnique();
+            });
         }
     }
 }
