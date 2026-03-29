@@ -6,7 +6,6 @@ namespace SportsLeague.Domain.Interfaces.Repositories
     public interface ISponsorRepository : IGenericRepository<Sponsor>
     {
         Task<bool> ExistsByNameAsync(string name);
-        Task<bool> ExistsByEmailAsync(string email);
         Task<Sponsor?> GetByNameAsync(string name);
         Task<Sponsor?> GetByEmailAsync(string email);
         Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category);

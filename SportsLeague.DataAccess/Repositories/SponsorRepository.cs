@@ -14,25 +14,20 @@ namespace SportsLeague.DataAccess.Repositories
 
         public async Task<bool> ExistsByNameAsync(string name)
         {
-           return await _dbSet
-                .AnyAsync(s => s.Name == name);
-        }
-        public async Task<bool> ExistsByEmailAsync(string email)
-        {
             return await _dbSet
-                 .AnyAsync(s => s.ContactEmail == email);
+                 .AnyAsync(s => s.Name.ToLower() == name.ToLower());
         }
 
         public async Task<Sponsor?> GetByNameAsync(string name)
         {
             return await _dbSet
-                 .FirstOrDefaultAsync(s => s.Name == name);
+                 .FirstOrDefaultAsync(s => s.Name.ToLower() == name.ToLower());
         }
 
         public async Task<Sponsor?> GetByEmailAsync(string email)
         {
             return await _dbSet
-                 .FirstOrDefaultAsync(s => s.ContactEmail == email);
+                 .FirstOrDefaultAsync(s => s.ContactEmail.ToLower() == email.ToLower());
         }
 
         public async Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category)

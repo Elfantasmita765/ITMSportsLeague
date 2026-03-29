@@ -19,7 +19,7 @@ namespace SportsLeague.DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<TournamentSponsor?> GetByTournamentAndSponsorAsync(int tournamentId, int sponsorId)
+        public async Task<TournamentSponsor?> GetByTournamentAndSponsorIdAsync(int tournamentId, int sponsorId)
         {
             return await _dbSet
                 .FirstOrDefaultAsync(ts =>
