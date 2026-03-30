@@ -176,7 +176,7 @@ namespace SportsLeague.Domain.Services
             return tournamentSponsors.Select(ts => ts.Sponsor);
         }
 
-        public async Task LinkSponsorAsync(int tournamentId, int sponsorId, decimal amount)
+        public async Task<TournamentSponsor> LinkSponsorAsync(int tournamentId, int sponsorId, decimal amount)
         {
             //Validar que el monto sea mayor a 0
             if (amount <= 0)
@@ -218,6 +218,10 @@ namespace SportsLeague.Domain.Services
                 "Linking sponsor {SponsorId} in tournament {TournamentId}",
                 sponsorId, tournamentId);
             await _tournamentSponsorRepository.CreateAsync(tournamentSponsor);
+
+            var result = await _tournamentSponsorRepository.GetByTournamentAndSponsorIdAsync(tournamentId, sponsorId);
+
+            return result!;
         }
 
         public async Task UnlinkSponsorAsync(int tournamentId, int sponsorId)

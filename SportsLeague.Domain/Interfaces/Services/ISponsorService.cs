@@ -7,17 +7,17 @@ namespace SportsLeague.Domain.Interfaces.Services
 {
     public interface ISponsorService
     {
-        Task<IEnumerable<Sponsor>> GetAllAsync(); //LISTO
-        Task<Sponsor?> GetByIdAsync(int id); //LISTO
-        Task<Sponsor?> GetByNameAsync(string name); //opc //LISTO
-        Task<Sponsor?> GetByEmailAsync(string Email); //opc //LISTO
-        Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category); //opc //LISTO
-        Task<Sponsor> CreateAsync(Sponsor sponsor); //LISTO
-        Task UpdateAsync(int id, Sponsor sponsor); //LISTO
-        Task DeleteAsync(int id); //LISTO
-        Task<IEnumerable<Team>> GetTournamentsBySponsorAsync(int sponsorId); //LISTO
-        Task<IEnumerable<Team>> GetSponsorsByTournamentAsync(int tournamentId); //LISTO
-        Task LinkSponsorAsync(int tournamentId, int sponsorId, decimal amount); //LISTO
-        Task UnlinkSponsorAsync(int tournamentId, int sponsorId); //LISTO
+        Task<IEnumerable<Sponsor>> GetAllAsync(); 
+        Task<Sponsor?> GetByIdAsync(int id); 
+        Task<Sponsor?> GetByNameAsync(string name);
+        Task<Sponsor?> GetByEmailAsync(string Email);
+        Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category);
+        Task<Sponsor> CreateAsync(Sponsor sponsor);
+        Task UpdateAsync(int id, Sponsor sponsor); 
+        Task DeleteAsync(int id); 
+        Task<IEnumerable<Tournament>> GetTournamentsBySponsorAsync(int sponsorId); 
+        Task<IEnumerable<Sponsor>> GetSponsorsByTournamentAsync(int tournamentId); 
+        Task<TournamentSponsor> LinkSponsorAsync(int tournamentId, int sponsorId, decimal amount); 
+        Task UnlinkSponsorAsync(int tournamentId, int sponsorId); 
     }
 }
