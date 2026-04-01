@@ -50,15 +50,6 @@ namespace SportsLeague.Domain.Services
             return sponsor;
         }
 
-        public async Task<Sponsor?> GetByEmailAsync(string email)
-        {
-            _logger.LogInformation("Retrieving sponsor with Email: {SponsorEmail}", email);
-            var sponsor = await _sponsorRepository.GetByEmailAsync(email);
-            if (sponsor == null)
-                _logger.LogWarning("sponsor with Email {SponsorEmail} not found", email);
-            return sponsor;
-        }
-
         public async Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category)
         {
             //Validar que la categoria si exista dentro del Enum (SponsorCategory)

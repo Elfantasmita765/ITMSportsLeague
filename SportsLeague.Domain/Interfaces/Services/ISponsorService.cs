@@ -10,7 +10,6 @@ namespace SportsLeague.Domain.Interfaces.Services
         Task<IEnumerable<Sponsor>> GetAllAsync(); 
         Task<Sponsor?> GetByIdAsync(int id); 
         Task<Sponsor?> GetByNameAsync(string name);
-        Task<Sponsor?> GetByEmailAsync(string Email);
         Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category);
         Task<Sponsor> CreateAsync(Sponsor sponsor);
         Task UpdateAsync(int id, Sponsor sponsor); 

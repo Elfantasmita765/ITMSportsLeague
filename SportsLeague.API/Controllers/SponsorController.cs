@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SportsLeague.API.DTOs.Request;
 using SportsLeague.API.DTOs.Response;
 using SportsLeague.Domain.Entities;
 using SportsLeague.Domain.Enums;
 using SportsLeague.Domain.Interfaces.Services;
-using SportsLeague.Domain.Services;
 
 namespace SportsLeague.API.Controllers
 {
@@ -62,25 +60,16 @@ namespace SportsLeague.API.Controllers
             return Ok(sponsorDto);
         }
 
-        //OBTENER SPONSOR POR EMAIL
-        [HttpGet("by-email/{email}")]
-        public async Task<ActionResult<SponsorResponseDTO>> GetByEmail(string email)
-        {
-            var sponsor = await _sponsorService.GetByEmailAsync(email);
-
-            if (sponsor == null)
-                return NotFound(new { message = $"Sponsor con Email {email} no encontrado" });
-
-            var sponsorDto = _mapper.Map<SponsorResponseDTO>(sponsor);
-            return Ok(sponsorDto);
-        }
-
         //LISTAR SPONSORS POR CATEGORIA
         [HttpGet("by-category/{category}")]
         public async Task<ActionResult<IEnumerable<SponsorResponseDTO>>> GetByCategory(SponsorCategory category)
         {
+            try
+            {
                 var sponsors = await _sponsorService.GetByCategoryAsync(category);
                 return Ok(_mapper.Map<IEnumerable<SponsorResponseDTO>>(sponsors));
+            }
+            catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
         }
 
         //CREAR SPONSOR

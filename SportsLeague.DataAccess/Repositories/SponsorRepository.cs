@@ -24,12 +24,6 @@ namespace SportsLeague.DataAccess.Repositories
                  .FirstOrDefaultAsync(s => s.Name.ToLower() == name.ToLower());
         }
 
-        public async Task<Sponsor?> GetByEmailAsync(string email)
-        {
-            return await _dbSet
-                 .FirstOrDefaultAsync(s => s.ContactEmail.ToLower() == email.ToLower());
-        }
-
         public async Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category)
         {
             return await _dbSet
