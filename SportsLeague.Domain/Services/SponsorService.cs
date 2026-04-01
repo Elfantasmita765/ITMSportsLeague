@@ -61,10 +61,6 @@ namespace SportsLeague.Domain.Services
 
         public async Task<IEnumerable<Sponsor>> GetByCategoryAsync(SponsorCategory category)
         {
-            //Validar que la categoria si exista dentro del Enum (SponsorCategory)
-            if (!Enum.IsDefined(typeof(SponsorCategory), category))
-                throw new ArgumentException("Categoria invalida");
-
             _logger.LogInformation("Retrieving sponsors with Category: {SponsorCategory}", category);
             var sponsors = await _sponsorRepository.GetByCategoryAsync(category);
             return sponsors;
@@ -91,11 +87,7 @@ namespace SportsLeague.Domain.Services
             {
                 throw new ArgumentException("Formato de email es invalido", nameof(email));
             }
-
-            //Validar que la categoria sea valida
-            if (!Enum.IsDefined(typeof(SponsorCategory), sponsor.Category))
-                throw new ArgumentException("Categoria invalida");
-
+            
             _logger.LogInformation("Creating sponsor: {SponsorName}", sponsor.Name);
             return await _sponsorRepository.CreateAsync(sponsor);
         }
@@ -125,10 +117,6 @@ namespace SportsLeague.Domain.Services
             {
                 throw new ArgumentException("Formato de email es invalido", nameof(email));
             }
-
-            //Validar que la categoria sea valida
-            if (!Enum.IsDefined(typeof(SponsorCategory), sponsor.Category))
-                throw new ArgumentException("Categoria invalida");
 
             existing.Name = sponsor.Name;
             existing.ContactEmail = sponsor.ContactEmail;
