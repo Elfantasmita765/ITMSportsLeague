@@ -79,12 +79,8 @@ namespace SportsLeague.API.Controllers
         [HttpGet("by-category/{category}")]
         public async Task<ActionResult<IEnumerable<SponsorResponseDTO>>> GetByCategory(SponsorCategory category)
         {
-            try 
-            {
                 var sponsors = await _sponsorService.GetByCategoryAsync(category);
                 return Ok(_mapper.Map<IEnumerable<SponsorResponseDTO>>(sponsors));
-            }
-            catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); } //Para que muestre el mensaje de error en caso de ingresar una categoria invalida
         }
 
         //CREAR SPONSOR
@@ -98,14 +94,8 @@ namespace SportsLeague.API.Controllers
                 var responseDto = _mapper.Map<SponsorResponseDTO>(created);
                 return CreatedAtAction(nameof(GetById), new { id = responseDto.Id }, responseDto);
             }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            catch (InvalidOperationException ex) { return BadRequest(new { message = ex.Message }); }
+            catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
         }
 
         //ACTUALIZAR SPONSOR
