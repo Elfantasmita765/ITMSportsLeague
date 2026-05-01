@@ -14,6 +14,8 @@ namespace SportsLeague.Domain.Entities
         public ICollection<TournamentTeam> TournamentTeams { get; set; } = new List<TournamentTeam>();
 
         public ICollection<TournamentSponsor> TournamentSponsors { get; set; } = new List<TournamentSponsor>(); //NUEVO
+
+        public ICollection<Match> Matches { get; set; } = new List<Match>();
     }
 
 }
