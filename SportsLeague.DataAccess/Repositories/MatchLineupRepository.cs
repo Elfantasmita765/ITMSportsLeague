@@ -13,6 +13,8 @@ namespace SportsLeague.DataAccess.Repositories
         {
             return await _dbSet
                 .Where(ml => ml.MatchId == matchId)
+                .Include(ml => ml.Player)
+                .ThenInclude(p => p.Team)
                 .ToListAsync();
         }
 
@@ -21,6 +23,8 @@ namespace SportsLeague.DataAccess.Repositories
             return await _dbSet
                 .Where(ml => ml.MatchId == matchId)
                 .Where(ml => ml.Player.TeamId == teamId)
+                .Include(ml => ml.Player)
+                .ThenInclude(p => p.Team)
                 .ToListAsync();
         }
 
@@ -29,6 +33,14 @@ namespace SportsLeague.DataAccess.Repositories
             return await _dbSet
                 .AnyAsync(ml => ml.MatchId == matchId && ml.PlayerId == playerId);
         }
-            
+
+        public async Task<MatchLineup?> GetByIdWithDetails(int id)
+        {
+            return await _dbSet
+                .Include(ml => ml.Match)
+                .Include(ml => ml.Player)
+                .ThenInclude(p => p.Team)
+                .FirstOrDefaultAsync(ml => ml.Id == id);
+        }
     }
 }

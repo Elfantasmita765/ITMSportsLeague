@@ -32,13 +32,13 @@ namespace SportsLeague.Domain.Services
         }
 
         //Agregar jugador a la alineacion
-        public async Task<MatchLineup> AddPlayerInMatchLineupAsync(MatchLineup matchLineup)
+        public async Task<MatchLineup> AddPlayerInMatchLineupAsync(int matchId ,MatchLineup matchLineup)
         {
             // Validacion de que el partido exista
-            var match = await _matchRepository.GetByIdAsync(matchLineup.MatchId);
+            var match = await _matchRepository.GetByIdAsync(matchId);
             if (match == null)
                 throw new KeyNotFoundException(
-                    $"No se encontró el partido con ID {matchLineup.MatchId}");
+                    $"No se encontró el partido con ID {matchId}");
 
             // Validacion de que el partido este en estado Scheduled
             if (match.Status != 0)
@@ -58,7 +58,7 @@ namespace SportsLeague.Domain.Services
 
             // Validacion de que el jugador no se encuentre ya registrado en la alineacion
             bool repeat = await _matchLineupRepository.
-                ExistsByMatchAndPlayer(matchLineup.MatchId, matchLineup.PlayerId);
+                ExistsByMatchAndPlayer(matchId, matchLineup.PlayerId);
             if (repeat == true)
             {
                 throw new InvalidOperationException(
@@ -66,7 +66,7 @@ namespace SportsLeague.Domain.Services
             }
 
             // Validacion del limite de titulares por equipo por partido (max 11)
-            var matchlineUps = await _matchLineupRepository.GetByMatchAndTeam(matchLineup.MatchId, player!.TeamId);
+            var matchlineUps = await _matchLineupRepository.GetByMatchAndTeam(matchId, player!.TeamId);
             int starterscount = matchlineUps.Count(ml => ml.IsStarter == true);
             if (starterscount >= 11 && matchLineup.IsStarter == true)
             {
@@ -74,12 +74,17 @@ namespace SportsLeague.Domain.Services
                     "El máximo de titulares por equipo por partido es 11");
             }
 
+            matchLineup.MatchId = matchId;
+
             _logger.LogInformation(
-                $"Registering LineUp for match: {matchLineup.MatchId}, " +
-                $"Player: {matchLineup.Player.FirstName + "" + matchLineup.Player.LastName}");
-            return await _matchLineupRepository.CreateAsync(matchLineup);
+                $"Registering LineUp for match: {matchId}");
+            var created = await _matchLineupRepository.CreateAsync(matchLineup);
+
+            return await _matchLineupRepository.GetByIdWithDetails(created.Id) ?? throw new KeyNotFoundException(
+                "Error loading lineup");
         }
 
+        //Obtener la alineacion completa del partido
         public async Task<IEnumerable<MatchLineup>> GetMatchLineupByMatchAsync(int matchId)
         {
             // Validacion de que el partido exista
@@ -91,7 +96,8 @@ namespace SportsLeague.Domain.Services
             return await _matchLineupRepository.GetByMatch(matchId);
         }
 
-        public async Task<IEnumerable<MatchLineup>> GetMatchLineupByMatchAndTeam(int matchId, int teamId)
+        //Obtener alineacion de un equipo especifico
+        public async Task<IEnumerable<MatchLineup>> GetMatchLineupByMatchAndTeamAsync(int matchId, int teamId)
         {
             // Validacion de que el partido exista
             var match = await _matchRepository.GetByIdAsync(matchId);
@@ -108,13 +114,14 @@ namespace SportsLeague.Domain.Services
             // Validacion de que el quipo este en el partido
             if (teamId != match.AwayTeamId && teamId != match.HomeTeamId)
             {
-                throw new InvalidOperationException(
+                throw new KeyNotFoundException(
                     $"Este equipo no forma parte del partido");
             }
 
             return await _matchLineupRepository.GetByMatchAndTeam(matchId, teamId);
         }
 
+        //Eliminar un jugador de la alineacion
         public async Task DeleteMatchLineupAsync(int matchId, int matchLineupId)
         {
             //Validacion de que el partido exista
