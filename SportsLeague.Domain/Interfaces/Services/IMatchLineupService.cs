@@ -4,9 +4,9 @@ namespace SportsLeague.Domain.Interfaces.Services
 {
     public interface IMatchLineupService
     {
-        Task<MatchLineup> AddPlayerAsync(MatchLineup matchLineup);
+        Task<MatchLineup> AddPlayerInMatchLineupAsync(MatchLineup matchLineup);
         Task<IEnumerable<MatchLineup>> GetMatchLineupByMatchAsync(int matchId);
-        Task<MatchLineup> GetMatchLineupByMatchAndTeam(int matchId, int teamId);
-        Task DeleteMatchLineupAsync(int matchId);
+        Task<IEnumerable<MatchLineup>> GetMatchLineupByMatchAndTeam(int matchId, int teamId);
+        Task DeleteMatchLineupAsync(int matchId, int matchLineupId);
     }
 }
