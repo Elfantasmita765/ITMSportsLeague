@@ -60,7 +60,7 @@ namespace SportsLeague.API.Controllers
         }
 
         [HttpDelete("lineup/{id}")]
-        public async Task<ActionResult> Delete(int matchId, int id)
+        public async Task<ActionResult> DeleteMatchLineupAsync(int matchId, int id)
         {
             try
             {
